@@ -1,7 +1,9 @@
 class Play extends Phaser.Scene{
+
     constructor(){
         super("playScene");
     }
+
     preload(){
         //load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
@@ -9,6 +11,7 @@ class Play extends Phaser.Scene{
         this.load.image('starfield','./assets/starfield.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
+
     create(){
         this.add.text(20,20,"Rocket Patrol Play");
         //place tile sprite
@@ -63,22 +66,39 @@ class Play extends Phaser.Scene{
             color: '#843605', 
             align: 'left', 
             padding: {top: 5, bottom: 5,}, 
-            fixedWidth: 500}
-        this.highScoreRight = this.add.text(game.config.width - borderPadding*14, borderUISize + borderPadding*2, highScore, scoreConfig);
+            fixedWidth: 150}
+        this.highScoreText = this.add.text(game.config.width - borderPadding*18, borderUISize + borderPadding*2, "High Score:", highScoreConfig)
+        this.highScoreRight = this.add.text(game.config.width - borderPadding*18, borderUISize + borderPadding*4, highScore, highScoreConfig);
         // GAME OVER flag
         this.gameOver = false;
+        //display Clock
+        let clockConfig = {
+            fontFamily: 'Courier', 
+            fontSize: '30px', 
+            backgroundColor: '#F3B141', 
+            color: '#843605', 
+            align: 'center', 
+            padding: {top: 5, bottom: 5,}, 
+            fixedWidth: 35}
         //60-second play clock
         scoreConfig.fixedWidth = 0;
+        timer = game.settings.gameTimer / 1000;
         this.clock = this.time.delayedCall(game.settings.gameTimer, ()=> {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
             if(this.p1Score > highScore){
-                highScore = p1Score;
+                highScore = this.p1Score;
             }
         }, null, this);
+        this.clockText = this.add.text(300, borderUISize + borderPadding*3, timer, clockConfig);
     }
+
     update(){
+        secondCount = secondCount - 1;
+        if(secondCount <= 0 && !this.gameOver){
+           this.timerUpdate();
+        } 
         //check key input for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -105,6 +125,7 @@ class Play extends Phaser.Scene{
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);        }
     }
+
     checkCollision(rocket, ship){
         // simple AABB checking
         if(rocket.x < ship.x + ship.width && rocket.x + rocket.width > ship.x && rocket.y < ship.y + ship.height && rocket.height + rocket.y > ship.y){
@@ -113,6 +134,7 @@ class Play extends Phaser.Scene{
             return false;
         }
     }
+
     shipExplode(ship){
         //temporarily hide ship
         ship.alpha = 0;
@@ -127,5 +149,15 @@ class Play extends Phaser.Scene{
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+    }
+
+    timerUpdate(){
+        timer -= 1; 
+        this.clockText.text = timer;
+        if(timer < 0){
+            return 0;
+        }
+        //console.log(this.clockText);
+        secondCount = 120;
     }
 }
