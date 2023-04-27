@@ -84,6 +84,7 @@ class Play extends Phaser.Scene{
         scoreConfig.fixedWidth = 0;
         timer = game.settings.gameTimer / 1000;
         this.clockText = this.add.text(300, borderUISize + borderPadding*3, timer, clockConfig);
+        let speedUp = false;
     }
 
     update(){
@@ -156,6 +157,12 @@ class Play extends Phaser.Scene{
         this.clockText.text = timer;
         if(timer < 0){
             return 0;
+        }
+        if(timer == 30 && !this.speedUp){
+            this.speedUp = true;
+            this.ship01.moveSpeed += 3;
+            this.ship02.moveSpeed += 2;
+            this.ship03.moveSpeed += 1;
         }
         //console.log(this.clockText);
         secondCount = 120;
