@@ -30,9 +30,9 @@ class Play extends Phaser.Scene{
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         //add spaceships x3
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize *6, borderUISize*4, 'spaceship',0,30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0,20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0,10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize *6, borderUISize*4, 'spaceship',0,15).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0,10).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0,5).setOrigin(0,0);
         if(this.ship01.direction == 0){
             this.ship01.x = 0 - borderUISize *6
             this.ship01.setFlipX(true);
@@ -83,29 +83,24 @@ class Play extends Phaser.Scene{
         //60-second play clock
         scoreConfig.fixedWidth = 0;
         timer = game.settings.gameTimer / 1000;
-        this.clock = this.time.delayedCall(game.settings.gameTimer, ()=> {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-            if(this.p1Score > highScore){
-                highScore = this.p1Score;
-            }
-        }, null, this);
         this.clockText = this.add.text(300, borderUISize + borderPadding*3, timer, clockConfig);
     }
 
     update(){
         secondCount = secondCount - 1;
+        if(timer == 0){
+            this.funGameOver();
+            //check key input for restart
+            if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
+                this.scene.restart();
+            }
+            if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
+                this.scene.start("menuScene");
+            }
+        }
         if(secondCount <= 0 && !this.gameOver){
-           this.timerUpdate();
+            this.timerUpdate();
         } 
-        //check key input for restart
-        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.scene.restart();
-        }
-        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
-            this.scene.start("menuScene");
-        }
         this.starfield.tilePositionX -= 5;  //updates scrolling background
         if(!this.gameOver){
             this.p1Rocket.update();         //update rocket sprite
@@ -139,6 +134,7 @@ class Play extends Phaser.Scene{
         //temporarily hide ship
         ship.alpha = 0;
         //create explosion sprite at ship's position
+        timer += 5;
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0,0);
         boom.anims.play('explode');             //play explode anim
         boom.on('animationcomplete', ()=> {     //callback after anim completes
@@ -146,8 +142,12 @@ class Play extends Phaser.Scene{
             ship.alpha = 1;                     //make ship visible again
             boom.destroy();                     //remove explosion sprite
         })
+        //console.log(this.time.now/1000);
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
+        this.time.now -= 5000;
+        
+        //console.log(game.settings.gameTimer);
         this.sound.play('sfx_explosion');
     }
 
@@ -159,5 +159,15 @@ class Play extends Phaser.Scene{
         }
         //console.log(this.clockText);
         secondCount = 120;
+    }
+
+    funGameOver(){
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', this.scoreConfig).setOrigin(0.5);
+        this.gameOver = true;
+        if(this.p1Score > highScore){
+            highScore = this.p1Score;
+        }
+        //console.log(this.time.now/1000);
     }
 }
