@@ -5,7 +5,7 @@
         - Track a high score that persists across scenes and display it in the UI (5)
         - Implement the speed increase that happens after 30 seconds in the original game (5)
         - Allow the player to control the Rocket after it's fired (5)
-        /Implement the 'FIRE' UI text from the original game (5)
+        - Implement the 'FIRE' UI text from the original game (5)
         - Add your own (copyright-free) background music to the Play scene (please be mindful of the volume) (5)
         /Create a new scrolling tile sprite for the background (5)
         - Display the time remaining (in seconds) on the screen (10)

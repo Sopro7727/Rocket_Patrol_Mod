@@ -51,13 +51,14 @@ class Play extends Phaser.Scene{
         //display score
         let scoreConfig = {
             fontFamily: 'Courier', 
-            fontSize: '28px', 
+            fontSize: '18px', 
             backgroundColor: '#F3B141', 
             color: '#843605', 
             align: 'right', 
             padding: {top: 5, bottom: 5,}, 
             fixedWidth: 100}
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreText = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, "Score:", scoreConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*4, this.p1Score, scoreConfig);
         //display HighScore
         let highScoreConfig = {
             fontFamily: 'Courier', 
@@ -115,7 +116,7 @@ class Play extends Phaser.Scene{
         if(secondCount <= 0 && !this.gameOver){
             this.timerUpdate();
         } 
-        this.starfield.tilePositionX -= 5;  //updates scrolling background
+        this.starfield.tilePositionX -= 1;  //updates scrolling background
         if(!this.gameOver){
             this.p1Rocket.update();         //update rocket sprite
             this.ship01.update();           //update spaceships x3
