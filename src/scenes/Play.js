@@ -9,6 +9,7 @@ class Play extends Phaser.Scene{
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship','./assets/spaceship.png');
         this.load.image('starfield','./assets/starfield.png');
+        this.load.image('fafspaceship', './assets/FAFSpaceship.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
@@ -33,6 +34,7 @@ class Play extends Phaser.Scene{
         this.ship01 = new Spaceship(this, game.config.width + borderUISize *6, borderUISize*4, 'spaceship',0,15).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0,10).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0,5).setOrigin(0,0);
+        this.fafship = new FAFSpaceship(this, game.config.width + borderUISize*4, borderUISize*4.5 + borderPadding * 3, 'fafspaceship', 0, 30);
         if(this.ship01.direction == 0){
             this.ship01.x = 0 - borderUISize *6
             this.ship01.setFlipX(true);
@@ -44,6 +46,10 @@ class Play extends Phaser.Scene{
         if(this.ship03.direction == 0){
             this.ship03.x = 0
             this.ship03.setFlipX(true);
+        }
+        if(this.fafship.direction == 0){
+            this.fafship.x = 0 - borderUISize * 4.5;
+            this.fafship.setFlipX(true);
         }
         this.anims.create({key:'explode', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 9, first: 0}),frameRate: 30});
         //initialize score
@@ -96,6 +102,7 @@ class Play extends Phaser.Scene{
             fixedWidth: 100}
         fireText = this.add.text(borderUISize + borderPadding*3, 100, "FIRE", fireConfig);
         fireText.alpha = 0;
+        let fafMove = false;
     }
 
     update(){
@@ -118,6 +125,12 @@ class Play extends Phaser.Scene{
         } 
         this.starfield.tilePositionX -= 1;  //updates scrolling background
         if(!this.gameOver){
+            if(timer%5 == 0){
+                this.fafMove = true;
+            }
+            if(this.fafMove == true){
+                this.fafship.update();
+            }
             this.p1Rocket.update();         //update rocket sprite
             this.ship01.update();           //update spaceships x3
             this.ship02.update();
@@ -134,6 +147,10 @@ class Play extends Phaser.Scene{
         if(this.checkCollision(this.p1Rocket,this.ship01)){
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);        }
+        if(this.checkCollision(this.p1Rocket, this.fafship)){
+            this.p1Rocket.reset();
+            this.shipExplode(this.fafship);
+        }
         if(!backgroundMusic.isPlaying){
             backgroundMusic.play();
         }
@@ -178,9 +195,10 @@ class Play extends Phaser.Scene{
         }
         if(timer == 30 && !this.speedUp){
             this.speedUp = true;
-            this.ship01.moveSpeed += 3;
-            this.ship02.moveSpeed += 2;
-            this.ship03.moveSpeed += 1;
+            this.ship01.moveSpeed += (Math.random()+1) * 2;
+            this.ship02.moveSpeed += (Math.random()+1) * 2;
+            this.ship03.moveSpeed += (Math.random()+1) * 2;
+            console.log(`Ship 1 : ${this.ship01.moveSpeed}\nShip 2: ${this.ship02.moveSpeed}\nShip 3: ${this.ship03.moveSpeed}`);
         }
         //console.log(this.clockText);
         secondCount = 120;
