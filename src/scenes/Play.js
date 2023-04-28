@@ -66,7 +66,7 @@ class Play extends Phaser.Scene{
             color: '#843605', 
             align: 'left', 
             padding: {top: 5, bottom: 5,}, 
-            fixedWidth: 150}
+            fixedWidth: 120}
         this.highScoreText = this.add.text(game.config.width - borderPadding*18, borderUISize + borderPadding*2, "High Score:", highScoreConfig)
         this.highScoreRight = this.add.text(game.config.width - borderPadding*18, borderUISize + borderPadding*4, highScore, highScoreConfig);
         // GAME OVER flag
@@ -79,12 +79,22 @@ class Play extends Phaser.Scene{
             color: '#843605', 
             align: 'center', 
             padding: {top: 5, bottom: 5,}, 
-            fixedWidth: 35}
+            fixedWidth: 55}
         //60-second play clock
         scoreConfig.fixedWidth = 0;
         timer = game.settings.gameTimer / 1000;
         this.clockText = this.add.text(300, borderUISize + borderPadding*3, timer, clockConfig);
         let speedUp = false;
+        let fireConfig = {
+            fontFamily: 'Courier', 
+            fontSize: '40px', 
+            backgroundColor: '#F3B141', 
+            color: '#843605', 
+            align: 'center', 
+            padding: {top: 5, bottom: 5,}, 
+            fixedWidth: 100}
+        fireText = this.add.text(borderUISize + borderPadding*3, 100, "FIRE", fireConfig);
+        fireText.alpha = 0;
     }
 
     update(){
@@ -98,6 +108,9 @@ class Play extends Phaser.Scene{
             if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
                 this.scene.start("menuScene");
             }
+        }
+        if(isFiring){
+            fireText.alpha = 1;
         }
         if(secondCount <= 0 && !this.gameOver){
             this.timerUpdate();
@@ -120,14 +133,15 @@ class Play extends Phaser.Scene{
         if(this.checkCollision(this.p1Rocket,this.ship01)){
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);        }
-        if(!this.backgroundMusic.isPlaying){
-                this.backgroundMusic.play()
+        if(!backgroundMusic.isPlaying){
+            backgroundMusic.play();
         }
     }
 
     checkCollision(rocket, ship){
         // simple AABB checking
         if(rocket.x < ship.x + ship.width && rocket.x + rocket.width > ship.x && rocket.y < ship.y + ship.height && rocket.height + rocket.y > ship.y){
+            fireText.alpha = 0;
             return true;
         } else {
             return false;

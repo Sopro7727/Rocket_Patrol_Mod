@@ -30,8 +30,8 @@ class Menu extends Phaser.Scene{
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, "Press ← for Novice or → for Expert", menuConfig).setOrigin(0.5);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.backgroundMusic = this.sound.add('background_music', {volume: 0.5});
-        this.backgroundMusic.play();
+        backgroundMusic = this.sound.add('background_music', {volume: 0.5});
+        backgroundMusic.play();
         }
     update(){
         if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
@@ -53,8 +53,8 @@ class Menu extends Phaser.Scene{
             this.sound.play('sfx_select');
             this.scene.start('playScene');
         }
-        if(!this.backgroundMusic.isPlaying){
-            this.backgroundMusic.play()
+        if(!backgroundMusic.isPlaying){
+            backgroundMusic.play();
         }
     }
 }
