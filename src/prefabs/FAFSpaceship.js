@@ -1,9 +1,9 @@
-class FAFSpaceship extends Spaceship{
+class FAFSpaceship extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, texture, frame, pointValue){
         super(scene, x,y,texture,frame);
         scene.add.existing(this);
         this.points = pointValue;
-        this.moveSpeed = game.settings.spaceshipSpeed + 3;
+        this.moveSpeed = game.settings.spaceshipSpeed + 4;
         this.direction = Math.floor(Math.random()*2);
     }
     update(){
