@@ -9,9 +9,8 @@
         - Add your own (copyright-free) background music to the Play scene (please be mindful of the volume) (5)
         - Create a new scrolling tile sprite for the background (5)
         - Display the time remaining (in seconds) on the screen (10)
-    /Create 4 new explosion sound effects and randomize which one plays on impact (10)
-/Using a texture atlas, create a new animated sprite for the Spaceship enemies (10)
-/Create a new title screen (e.g., new artwork, typography, layout) (10)
+        - Create 4 new explosion sound effects and randomize which one plays on impact (10)
+        - Create a new title screen (e.g., new artwork, typography, layout) (10)
         - Implement parallax scrolling for the background (10)
         - Implement a new timing/scoring mechanism that adds time to the clock for successful hits (15)
 */
@@ -23,7 +22,7 @@ let config ={
 }
 let game = new Phaser.Game(config);
 //reserve keyboard vars
-let keyF, keyR, keyLEFT, keyRIGHT, timer, backgroundMusic, isFiring, fireText;
+let keyENTER, keyF, keyR, keyLEFT, keyRIGHT, timer, backgroundMusic, isFiring, fireText;
 //set UI sizes
 let borderUISize = game.config.height/15;
 let borderPadding = borderUISize/3;

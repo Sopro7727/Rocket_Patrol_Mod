@@ -200,7 +200,25 @@ class Play extends Phaser.Scene{
         this.time.now -= 5000;
         
         //console.log(game.settings.gameTimer);
-        this.sound.play('sfx_explosion');
+        let soundEffect = Math.floor(Math.random()*4);
+        switch(soundEffect){
+            case 0:
+                this.sound.play('explosion1');
+                break;
+            case 1:
+                this.sound.play('explosion2');
+                break;
+            case 2:
+                this.sound.play('explosion3');
+                break;
+            case 3:
+                this.sound.play('explosion4');
+                break;
+            default:
+                throw 'Sound Effect Error: Randomizer Out of Bounds';
+                break;
+        }
+            //this.sound.play('sfx_explosion');
     }
 
     timerUpdate(){
